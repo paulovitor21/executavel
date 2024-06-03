@@ -3,6 +3,7 @@ from tkinter.scrolledtext import ScrolledText
 from PIL import Image
 from customtkinter import CTkImage
 from modules.funtion import carregar_pdf, carregar_excel, processar, export_report, check_files
+from modules.utils import get_resource_path
 
 def create_interface():
     # configuração janela principal
@@ -22,7 +23,8 @@ def create_interface():
     frame_esquerdo.grid_rowconfigure(3, weight=0)
     frame_esquerdo.grid_columnconfigure(0, weight=1)
 
-    logo_image = Image.open("assets/logo.png")
+    logo_path = get_resource_path("assets/logo.png")
+    logo_image = Image.open(logo_path)
     logo_image = logo_image.resize((173, 45))
     logo_ctk_image = CTkImage(light_image=logo_image, size=(173, 45))
     logo_label = ctk.CTkLabel(frame_esquerdo, image=logo_ctk_image, text="")
@@ -74,7 +76,12 @@ def create_interface():
     process_btn = ctk.CTkButton(frame_btn, text="Processar", state=ctk.DISABLED, command=lambda: processar(log_text, export_btn), fg_color="red", font=ctk.CTkFont(weight="bold"))
     process_btn.pack(side=ctk.LEFT, padx=10)
 
-    export_btn = ctk.CTkButton(frame_btn, text="Exportar Relatório", state=ctk.DISABLED, command=lambda: export_report(log_text, pdf_entry.get(), excel_entry.get()), fg_color="red", font=ctk.CTkFont(weight="bold"))
+    export_btn = ctk.CTkButton(
+        frame_btn, 
+        text="Exportar Relatório", 
+        state=ctk.DISABLED, 
+        command=lambda: export_report(log_text, pdf_entry.get()), 
+        fg_color="red", font=ctk.CTkFont(weight="bold"))
     export_btn.pack(side=ctk.LEFT, padx=10)
 
     # centralização dos botões processar e exportar

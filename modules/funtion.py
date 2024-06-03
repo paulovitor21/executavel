@@ -64,19 +64,19 @@ def extrair_description(excel_path):
         return df['description'].dropna().tolist()  # Retorna todas as descrições como uma lista
     return None
 
-def criar_documento_word(texto, texto_excel, file_path):
+def criar_documento_word(texto, file_path):
     doc = Document()
     doc.add_heading("Relatório de Processamento", 0)
     doc.add_paragraph('Este é um relatório de exemplo.')
     doc.add_paragraph(f'Import PO No: {texto}')
-    if texto_excel:
-        for desc in texto_excel:
-            doc.add_paragraph(f'Description: {desc}')
+    # if texto_excel:
+    #     for desc in texto_excel:
+    #         doc.add_paragraph(f'Description: {desc}')
     doc.add_paragraph(f'Data e Hora de criação: {data_hora_atual}')
     doc.save(file_path)
 
 
-def export_report(log_text, pdf_path, excel_path):
+def export_report(log_text, pdf_path):
     log_text.configure(state="normal")
     log_text.insert(ctk.END, f"{data_hora_atual} - Exportação do relatório iniciada...\n", "log")
     log_text.configure(state="disabled")
@@ -86,10 +86,10 @@ def export_report(log_text, pdf_path, excel_path):
 
     if file_path:
         texto = extrair_texto_pdf(pdf_path, "Import PO No")
-        texto_excel = extrair_description(excel_path)
+        # texto_excel = extrair_description(excel_path)
 
-        if texto and texto_excel:
-            criar_documento_word(texto, texto_excel, file_path)
+        if texto:
+            criar_documento_word(texto, file_path)
             
             log_text.configure(state="normal")
             log_text.insert(ctk.END, f"{data_hora_atual} - Relatório exportado com sucesso!\n", "log")
