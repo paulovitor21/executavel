@@ -64,19 +64,30 @@ def extrair_description(excel_path):
         return df['description'].dropna().tolist()  # Retorna todas as descrições como uma lista
     return None
 
-def criar_documento_word(texto, file_path):
+def adicionar_id(requisicao_id_entry, log_text):
+    requisicao_id = requisicao_id_entry.get()
+    if requisicao_id:
+        log_text.configure(state="normal")
+        log_text.insert("end", f"ID da Requisição: {requisicao_id}\n", "log")
+        log_text.configure(state="disabled")
+        return requisicao_id
+    else:
+        log_text.configure(state="normal")
+        log_text.insert("end", "Nenhum ID da Requisição inserido.\n", "log")
+        log_text.configure(state="disabled")
+        return None
+    
+def criar_documento_word(texto, requisicao_id, file_path):
     doc = Document()
     doc.add_heading("Relatório de Processamento", 0)
     doc.add_paragraph('Este é um relatório de exemplo.')
     doc.add_paragraph(f'Import PO No: {texto}')
-    # if texto_excel:
-    #     for desc in texto_excel:
-    #         doc.add_paragraph(f'Description: {desc}')
+    doc.add_paragraph(f'ID da Requisição: {requisicao_id}')
     doc.add_paragraph(f'Data e Hora de criação: {data_hora_atual}')
     doc.save(file_path)
 
 
-def export_report(log_text, pdf_path):
+def export_report(log_text, requisicao_id, pdf_path):
     log_text.configure(state="normal")
     log_text.insert(ctk.END, f"{data_hora_atual} - Exportação do relatório iniciada...\n", "log")
     log_text.configure(state="disabled")
@@ -89,7 +100,7 @@ def export_report(log_text, pdf_path):
         # texto_excel = extrair_description(excel_path)
 
         if texto:
-            criar_documento_word(texto, file_path)
+            criar_documento_word(texto, requisicao_id, file_path)
             
             log_text.configure(state="normal")
             log_text.insert(ctk.END, f"{data_hora_atual} - Relatório exportado com sucesso!\n", "log")

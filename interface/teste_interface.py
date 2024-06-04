@@ -8,6 +8,22 @@ from modules.utils import get_resource_path
 def only_numbers(char, current_text):
     return char.isdigit() and len(current_text + char) <= 5
 
+def verificar_campos(requisicao_id_entry, pdf_entry, excel_entry, adicionar_id_btn, process_btn, export_btn):
+    requisicao_id_valido = requisicao_id_entry.get().isdigit() and len(requisicao_id_entry.get()) == 5
+    pdf_valido = bool(pdf_entry.get())
+    excel_valido = bool(excel_entry.get())
+
+    if requisicao_id_valido:
+        adicionar_id_btn.configure(state="normal")
+    else:
+        adicionar_id_btn.configure(state="disabled")
+
+    if requisicao_id_valido and pdf_valido and excel_valido:
+        process_btn.configure(state="normal")
+        export_btn.configure(state="normal")
+    else:
+        process_btn.configure(state="disabled")
+        export_btn.configure(state="disabled")
 
 def create_interface():
     # configuração janela principal
@@ -57,9 +73,6 @@ def create_interface():
     # Validar apenas números
     vcmd = (frame_direito.register(lambda char, current_text: only_numbers(char, current_text)), '%S', '%P')
 
-    # StringVar para monitorar o campo de entrada
-    requisicao_id_var = ctk.StringVar()
-
     # campo para inserir o ID da Requisição
     requisicao_id_entry = ctk.CTkEntry(
         frame_direito,
@@ -72,7 +85,8 @@ def create_interface():
         frame_direito,
         text="Adicionar ID", 
         command=lambda: adicionar_id(requisicao_id_entry, log_text), 
-        fg_color="red", font=ctk.CTkFont(weight="bold"))
+        fg_color="red", font=ctk.CTkFont(weight="bold"),
+        state="disabled")
     adicionar_id_btn.grid(row=0, column=2, padx=5, pady=5)
 
     # Texto - selecionar PDF
@@ -105,14 +119,22 @@ def create_interface():
     process_btn = ctk.CTkButton(frame_btn, text="Processar", state=ctk.DISABLED, command=lambda: processar(log_text, export_btn), fg_color="red", font=ctk.CTkFont(weight="bold"))
     process_btn.pack(side=ctk.LEFT, padx=10)
 
-    # Botão exportar relatório
     export_btn = ctk.CTkButton(
         frame_btn, 
         text="Exportar Relatório", 
         state=ctk.DISABLED, 
-        command=lambda: export_report(log_text, requisicao_id_entry.get(), pdf_entry.get()), 
+        command=lambda: export_report(log_text, pdf_entry.get()), 
         fg_color="red", font=ctk.CTkFont(weight="bold"))
     export_btn.pack(side=ctk.LEFT, padx=10)
+
+    # Função para chamar a verificação ao mudar o conteúdo dos campos
+    def on_field_change(*args):
+        verificar_campos(requisicao_id_entry, pdf_entry, excel_entry, adicionar_id_btn, process_btn, export_btn)
+
+    # Associar a função de verificação às entradas
+    requisicao_id_entry.bind("<KeyRelease>", on_field_change)
+    pdf_entry.bind("<KeyRelease>", on_field_change)
+    excel_entry.bind("<KeyRelease>", on_field_change)
 
     # centralização dos botões processar e exportar
     frame_direito.grid_columnconfigure(0, weight=1)
@@ -139,4 +161,4 @@ def create_interface():
 
 if __name__ == "__main__":
     app = create_interface()
-    app.mainloop()
+   
