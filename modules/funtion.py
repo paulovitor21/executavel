@@ -64,18 +64,17 @@ def extrair_description(excel_path):
         return df['description'].dropna().tolist()  # Retorna todas as descrições como uma lista
     return None
 
-def adicionar_id(requisicao_id_entry, log_text):
-    requisicao_id = requisicao_id_entry.get()
-    if requisicao_id:
-        log_text.configure(state="normal")
-        log_text.insert("end", f"ID da Requisição: {requisicao_id}\n", "log")
-        log_text.configure(state="disabled")
-        return requisicao_id
-    else:
-        log_text.configure(state="normal")
-        log_text.insert("end", "Nenhum ID da Requisição inserido.\n", "log")
-        log_text.configure(state="disabled")
-        return None
+# def adicionar_id(requisicao_id_entry, log_text):
+#     if requisicao_id_entry:
+#         log_text.configure(state="normal")
+#         log_text.insert("end", f"ID da Requisição: {requisicao_id_entry}\n", "log")
+#         log_text.configure(state="disabled")
+#         return requisicao_id_entry
+#     else:
+#         log_text.configure(state="normal")
+#         log_text.insert("end", "Nenhum ID da Requisição inserido.\n", "log")
+#         log_text.configure(state="disabled")
+#         return None
     
 def criar_documento_word(texto, requisicao_id, file_path):
     doc = Document()
@@ -110,7 +109,30 @@ def export_report(log_text, requisicao_id, pdf_path):
             log_text.insert(ctk.END, f"{data_hora_atual} - Erro ao Exportar Relatório!\n", "log")
             log_text.configure(state="disabled")
 
-def check_files(pdf_entry, excel_entry, process_btn):
-    if pdf_entry.get() and excel_entry.get():
+# def check_files(pdf_entry, excel_entry, requisicao_id_entry, process_btn):
+#     if (pdf_entry.get() and excel_entry.get() and requisicao_id_entry.get()):
+#         process_btn.configure(state=ctk.NORMAL)
+
+# def check_files(pdf_entry, excel_entry, requisicao_id_entry, process_btn):
+#     if pdf_entry.get() and excel_entry.get() and requisicao_id_entry.get():
+#         process_btn.configure(state=ctk.NORMAL)
+#     else:
+#         process_btn.configure(state=ctk.DISABLED)
+
+
+def validate_entries(pdf_entry, excel_entry, requisicao_id_var, adicionar_id_btn, process_btn):
+    id_length_valid = len(requisicao_id_var.get()) == 5
+    pdf_filled = bool(pdf_entry.get())
+    excel_filled = bool(excel_entry.get())
+
+    if id_length_valid:
+        adicionar_id_btn.configure(state=ctk.NORMAL)
+    else:
+        adicionar_id_btn.configure(state=ctk.DISABLED)
+
+    if id_length_valid and pdf_filled and excel_filled:
         process_btn.configure(state=ctk.NORMAL)
+    else:
+        process_btn.configure(state=ctk.DISABLED)
+
 
