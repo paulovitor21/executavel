@@ -1,0 +1,28 @@
+[Setup]
+AppName=ImportPO
+AppVersion=1.0
+DefaultDirName={autopf}\ImportPO
+DefaultGroupName=ImportPO
+OutputDir=sw_importpo
+OutputBaseFilename=Setup_ImportPO
+Compression=lzma
+SolidCompression=yes
+PrivilegesRequired=admin
+LanguageDetectionMethod=locale
+
+[Languages]
+Name: "portuguese"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
+
+[Tasks]
+Name: "desktopicon"; Description: "Criar um ícone na área de trabalho"; GroupDescription: "Opções adicionais"; Flags: unchecked
+
+[Files]
+Source: "C:\Users\paulo\Desktop\backup_exe\executavel\dist\ImportPO.exe"; DestDir: "{app}"
+Source: "C:\Users\paulo\Desktop\backup_exe\executavel\dist\report.ico"; DestDir: "{app}"; Flags: onlyifdoesntexist
+
+[Icons]
+Name: "{group}\ImportPO"; Filename: "{app}\ImportPO.exe"
+Name: "{commondesktop}\ImportPO"; Filename: "{app}\ImportPO.exe"; Tasks: desktopicon
+
+[Messages]
+WelcomeLabel1=Bem-vindo ao instalador do ImportPO!
