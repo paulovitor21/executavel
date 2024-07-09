@@ -6,6 +6,7 @@ from customtkinter import CTkImage
 from docx import Document
 import fitz
 import pyautogui
+from PIL import Image, ImageDraw, ImageFont
 
 data_hora_atual = datetime.datetime.now().strftime("%d-%m-%y %H:%M:%S")
 
@@ -68,9 +69,12 @@ def export_report(log_text, requisicao_id, pdf_path):
             log_text.configure(state="normal")
             log_text.insert(ctk.END, f"{data_hora_atual} - Erro ao Exportar Relatório!\n", "log")
             log_text.configure(state="disabled")
+        
         # Salvar o conteúdo do log em um arquivo de texto
-        save_log_to_file(log_text)
+        #save_log_to_file(log_text)
         #capture_log_screenshot(log_text.master)
+         # Salvar o conteúdo do log como uma imagem
+        save_log_to_image(log_text)
 
 
 def process_export(log_text, requisicao_id_entry, pdf_entry):
@@ -152,3 +156,29 @@ def save_log_to_file(log_text):
     with open("log_content.txt", "w") as file:
         file.write(log_content)
 
+
+# Função para salvar o conteúdo do log como uma imagem
+def save_log_to_image(log_text):
+    log_content = log_text.get("1.0", ctk.END)
+    
+    # Configurar fonte e tamanho da imagem
+    font = ImageFont.truetype("arial.ttf", 14)
+    max_width = 800
+    line_height = font.getbbox("A")[3] - font.getbbox("A")[1]
+    
+    lines = log_content.splitlines()
+    spacing = 20  # Aumentar o espaçamento entre as linhas
+    img_height = (line_height + spacing) * len(lines) + 20  # 20 para padding
+
+    # Criar uma imagem com o tamanho calculado
+    img = Image.new("RGB", (max_width, img_height), "white")
+    draw = ImageDraw.Draw(img)
+
+    # Desenhar cada linha de texto na imagem
+    y = 10
+    for line in lines:
+        draw.text((10, y), line, fill="black", font=font)
+        y += line_height + spacing  # Adicionar espaçamento entre linhas
+
+    # Salvar a imagem
+    img.save("log_content.png")
