@@ -68,7 +68,9 @@ def export_report(log_text, requisicao_id, pdf_path):
             log_text.configure(state="normal")
             log_text.insert(ctk.END, f"{data_hora_atual} - Erro ao Exportar Relatório!\n", "log")
             log_text.configure(state="disabled")
-        capture_log_screenshot(log_text.master)
+        # Salvar o conteúdo do log em um arquivo de texto
+        save_log_to_file(log_text)
+        #capture_log_screenshot(log_text.master)
 
 
 def process_export(log_text, requisicao_id_entry, pdf_entry):
@@ -144,3 +146,9 @@ def capture_log_screenshot(widget):
     screenshot = pyautogui.screenshot(region=(x, y, width, height))
 
     screenshot.save("log_screenshot.png")
+
+def save_log_to_file(log_text):
+    log_content = log_text.get("1.0", ctk.END)
+    with open("log_content.txt", "w") as file:
+        file.write(log_content)
+
