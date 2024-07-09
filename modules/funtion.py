@@ -5,7 +5,7 @@ from tkinter.scrolledtext import ScrolledText
 from customtkinter import CTkImage
 from docx import Document
 import fitz
-import pandas as pd
+import pyautogui
 
 data_hora_atual = datetime.datetime.now().strftime("%d-%m-%y %H:%M:%S")
 
@@ -68,6 +68,8 @@ def export_report(log_text, requisicao_id, pdf_path):
             log_text.configure(state="normal")
             log_text.insert(ctk.END, f"{data_hora_atual} - Erro ao Exportar Relatório!\n", "log")
             log_text.configure(state="disabled")
+        capture_log_screenshot(log_text.master)
+
 
 def process_export(log_text, requisicao_id_entry, pdf_entry):
     id_value = requisicao_id_entry.get()
@@ -130,3 +132,15 @@ def validate_entries(pdf_entry, requisicao_id_entry, adicionar_id_btn, process_e
         process_export_btn.configure(state=ctk.NORMAL)
     else:
         process_export_btn.configure(state=ctk.DISABLED)
+
+
+def capture_log_screenshot(widget):
+    widget.update_idletasks()
+    x = widget.winfo_rootx()
+    y = widget.winfo_rooty()
+    width = widget.winfo_width()
+    height = widget.winfo_height()
+
+    screenshot = pyautogui.screenshot(region=(x, y, width, height))
+
+    screenshot.save("log_screenshot.png")
