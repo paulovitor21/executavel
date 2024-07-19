@@ -25,6 +25,7 @@ def carregar_pdf(pdf_entry, log_text, check_files):
     if pdf_path:
         pdf_entry.delete(0, ctk.END)
         pdf_entry.insert(0, pdf_path)
+        data_hora_atual = datetime.datetime.now().strftime("%d-%m-%y %H:%M:%S")
         log_text.configure(state="normal")
         log_text.insert(ctk.END, f"{data_hora_atual} - PDF importado com sucesso...\n", "log")
         log_text.configure(state="disabled")
@@ -43,6 +44,7 @@ def extrair_texto_pdf(pdf_path, texto_procurado):
     return None
 
 def processar(log_text):
+    data_hora_atual = datetime.datetime.now().strftime("%d-%m-%y %H:%M:%S")
     log_text.configure(state="normal")
     log_text.insert(ctk.END, f"{data_hora_atual} - Processamento iniciado...\n", "log")
     log_text.configure(state="disabled")
@@ -51,6 +53,7 @@ def processar(log_text):
     log_text.configure(state="disabled")
  
 def criar_documento_word(texto, requisicao_id, file_path):
+    data_hora_atual = datetime.datetime.now().strftime("%d-%m-%y %H:%M:%S")
     doc = Document()
     doc.add_heading("Relatório de Processamento", 0)
     doc.add_paragraph('Este é um relatório de exemplo.')
@@ -60,6 +63,7 @@ def criar_documento_word(texto, requisicao_id, file_path):
     doc.save(file_path)
 
 def export_report(log_text, requisicao_id, pdf_path):
+    data_hora_atual = datetime.datetime.now().strftime("%d-%m-%y %H:%M:%S")
     log_text.configure(state="normal")
     log_text.insert(ctk.END, f"{data_hora_atual} - Exportação do relatório iniciada...\n", "log")
     log_text.configure(state="disabled")
@@ -93,6 +97,7 @@ def process_export(log_text, requisicao_id_entry, pdf_entry):
         processar(log_text)
         export_report(log_text, id_value, pdf_value)
     else:
+        data_hora_atual = datetime.datetime.now().strftime("%d-%m-%y %H:%M:%S")
         log_text.configure(state="normal")
         log_text.insert(ctk.END, f"{data_hora_atual} - Entradas inválidas para processamento e/ou exportação.\n", "log")
         log_text.configure(state="disabled")
@@ -122,9 +127,10 @@ def is_placeholder(entry, placeholder):
     return entry.get() == placeholder
 
 def adicionar_id(requisicao_id_entry, log):
+    data_hora_atual = datetime.datetime.now().strftime("%d-%m-%y %H:%M:%S")
     id_value = requisicao_id_entry.get()
     log.configure(state="normal")
-    log.insert("end", f"ID Adicionado: {id_value}\n", "log")
+    log.insert("end", f"{data_hora_atual} - ID Adicionado: {id_value}\n", "log")
     log.configure(state="disabled")
 
 def validate_entries(pdf_entry, requisicao_id_entry, adicionar_id_btn, process_export_btn):
